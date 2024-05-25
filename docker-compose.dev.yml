@@ -1,0 +1,73 @@
+version: "3"
+
+services:
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - 8080:80
+    depends_on:
+      - postgres
+      - redis
+  
+  postgres:
+    image: "postgres:latest"
+    environment:
+      - POSTGRES_PASSWORD=40884432SARsar123@
+      - POSTGRES_DB=demo
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    
+  redis:
+    image: "redis:latest"
+  
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    image: sariamirza/backend
+    restart: always
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=demo
+      - PGPASSWORD=40884432SARsar123@
+      - PGPORT=5432
+    depends_on:
+      - postgres
+      - redis
+      - nginx
+
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    image: sariamirza/worker
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    volumes:
+      - ./worker:/app
+      - /app/node_modules
+    depends_on:
+      - redis
+
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    image: sariamirza/client
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - api
+      - postgres
+      - redis
+      - nginx
