@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - dokcer build -t sariamirza/react-test -f ./client/Dockerfile.dev .
+
+script:
+  - docker run sariamirza/react-test npm test -- --coverage --watchAll=false
+
+after_success:
+  - docker build -t sariamirza/client-prod ./client
+  - docker build -t sariamirza/api-prod ./server
+  - docker build -t sariamirza/nginx-prod ./nginx
+  - docker build -t sariamirza/worker-prod ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push sariamirza/client-prod
+  - docker push sariamirza/api-prod
+  - docker push sariamirza/worker-prod
+  - docker push sariamirza/nginx-prod
