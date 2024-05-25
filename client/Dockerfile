@@ -8,4 +8,6 @@ RUN npm i
 
 COPY . .
 
-CMD [ "npm","run","start" ]
+RUN npm run build
+
+RUN rm -fr node_modules
