@@ -19,3 +19,15 @@ after_success:
   - docker push sariamirza/api-prod
   - docker push sariamirza/worker-prod
   - docker push sariamirza/nginx-prod
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-north-1"
+  app: "multi-container"
+  env: "Multi-container-env"
+  bucket_name: "elasticbeanstalk-eu-north-1-058264168537"
+  bucket_path: "multi-container"
+  on:
+    branch: "master"
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
