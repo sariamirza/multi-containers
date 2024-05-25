@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t sariamirza/react-test -f ./client/Dockerfile.dev .
+  - docker build -t sariamirza/react-test -f ./client/Dockerfile.dev ./client
 
 script:
   - docker run sariamirza/react-test npm test -- --coverage --watchAll=false
