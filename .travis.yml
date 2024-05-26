@@ -19,6 +19,8 @@ after_success:
   - docker push sariamirza/api-prod
   - docker push sariamirza/worker-prod
   - docker push sariamirza/nginx-prod
+  on:
+    branch: "master"
 
 deploy:
   provider: elasticbeanstalk
