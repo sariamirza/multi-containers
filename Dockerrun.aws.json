@@ -1,6 +1,6 @@
 {
-  "AWSEBDockerrunVersion": 2,
-  "volumes": [
+  "AWSEBDockerrunVersion": "3",
+    "volumes": [
     {
       "name": "shared-build",
       "host": {
