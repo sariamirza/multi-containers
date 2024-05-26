@@ -10,17 +10,15 @@ script:
   - docker run sariamirza/react-test npm test -- --coverage --watchAll=false
 
 after_success:
-  - docker build -t sariamirza/client-prod ./client
-  - docker build -t sariamirza/api-prod ./server
-  - docker build -t sariamirza/nginx-prod ./nginx
-  - docker build -t sariamirza/worker-prod ./worker
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push sariamirza/client-prod
-  - docker push sariamirza/api-prod
-  - docker push sariamirza/worker-prod
-  - docker push sariamirza/nginx-prod
-  on:
-    branch: "master"
+  - test $TRAVIS_BRANCH = "master" && docker build -t sariamirza/client-prod ./client
+  - test $TRAVIS_BRANCH = "master" && docker build -t sariamirza/api-prod ./server
+  - test $TRAVIS_BRANCH = "master" && docker build -t sariamirza/nginx-prod ./nginx
+  - test $TRAVIS_BRANCH = "master" && docker build -t sariamirza/worker-prod ./worker
+  - test $TRAVIS_BRANCH = "master" && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - test $TRAVIS_BRANCH = "master" && docker push sariamirza/client-prod
+  - test $TRAVIS_BRANCH = "master" && docker push sariamirza/api-prod
+  - test $TRAVIS_BRANCH = "master" && docker push sariamirza/worker-prod
+  - test $TRAVIS_BRANCH = "master" && docker push sariamirza/nginx-prod
 
 deploy:
   provider: elasticbeanstalk
